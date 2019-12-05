@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>京东鲸盘</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <style type="text/css">
+        .load-font-tip{
+            font-size: 29px;
+            text-align: center;
+            margin-top: 20%;
+        }
+    </style>
+</head>
+<body>
+    <div class="load-font-tip" style="font-size: 29px;">请稍等,资源加载中...</div>
+    <script type="text/javascript" src="#springUrl('')/web-apps/vendor/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="#springUrl('')/web-apps/vendor/sockjs/sockjs.min.js"></script>
+    <script type="text/javascript" src="#springUrl('')/web-apps/vendor/xregexp/xregexp-all-min.js"></script>
+	<script type="text/javascript" src="#springUrl('')/sdkjs/common/AllFonts.js"></script>
+    <script type="text/javascript" src="#springUrl('')/sdkjs/word/sdk-all-min.js"></script>
+    <script type="text/javascript" src="#springUrl('')/sdkjs/word/sdk-all.js"></script>
+    <div id="editor_sdk"></div>
+    <script type="text/javascript">
+        window['AscNotLoadAllScript'] = true;
+        var win_fonts_map ={};
+        var win_font_arr = ["FangSong","KaiTi","Microsoft YaHei","Microsoft YaHei Light",
+            "Microsoft YaHei UI","Microsoft YaHei UI Light","NSimSun","SimHei","SimSun","SimSun-ExtB"
+        ];
+        var editor = new Asc.asc_docs_api({
+            'id-view'  : 'editor_sdk'
+        });
+        editor.LoadFontsFromServer(win_font_arr);
+        // 检查字体是否已经加载完成
+        var checkFontLoadTimer = window.setInterval("checkFontLoad()",30);
+        var font_c_len = 8;
+        function checkFontLoad(){
+            var len = countMapLen(win_fonts_map);
+            if(font_c_len === len){
+                //
+                // 去掉定时器的方法
+                window.clearInterval(checkFontLoadTimer);
+                /*
+                 * http://online.edit.jd.com/checkFont/edit/
+                 * http://online.edit.jd.com/edit/
+                 */
+                $('.load-font-tip').html("请稍等,资源加载中("+len+"/"+font_c_len+")...");
+                var oldUrl = location.href;
+                var cHost = location.origin,objRegExp= /checkFont/;
+                if(oldUrl){
+                    var obj = objRegExp.exec(oldUrl);
+                    if(obj){
+                        oldUrl= cHost +"/"+ oldUrl.substring(obj.index+10);
+                        location.href = oldUrl;
+                    }else{
+                        $('.load-font-tip').html("加载完成");
+                    }
+                }
+            }else{
+                $('.load-font-tip').html("请稍等,资源加载中("+len+"/"+font_c_len+")...");
+            }
+        }
+
+        function countMapLen(map){
+            let i = 0;
+            if(map){
+                for (m in map){
+                    ++i;
+                }
+            }
+            return i;
+        }
+    </script>
+</body>
+</html>
